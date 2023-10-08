@@ -14,30 +14,14 @@ import java.time.LocalDate;
 public class MainController {
     @Autowired
     MessageRepository messageRepository;
-//    @GetMapping("/")
-//    public String writeGetMessage(){
-//        try {
-//            Message result = messageRepository.save(new Message("hi", LocalDate.now()));
-//            return result.id;
-//        } catch (Exception e) {
-//            return "could not write user";
-//        }
-//    }
     @GetMapping("/")
     public String home() {
-        try {
-            Message result = messageRepository.save(new Message("hi", LocalDate.now()));
-            return result.id;
-        } catch (Exception e) {
-            return "could not write user";
-        }
+        return "meowwwwwww :3";
     }
 
-    @GetMapping("/e")
-    public String error() {
-//        System.out.println("running main page");
-        return "ran into error oh no";
+    @GetMapping("/mongotest")
+    public String writeGetMessage(){
+        Message result = messageRepository.save(new Message("hi", LocalDate.now()));
+        return result.id;
     }
-
-
 }
