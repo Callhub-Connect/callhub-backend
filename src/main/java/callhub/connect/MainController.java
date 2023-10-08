@@ -16,12 +16,18 @@ public class MainController {
     MessageRepository messageRepository;
     @GetMapping("/")
     public String home() {
-        return "meowwwwwww :3";
+        try {
+            Message result = messageRepository.save(new Message("hi", LocalDate.now()));
+            return result.id;
+        } catch (Exception e) {
+            return "could not write user";
+        }
+//        return "meowwwwwww :3";
     }
 
-    @GetMapping("/mongotest")
-    public String writeGetMessage(){
-        Message result = messageRepository.save(new Message("hi", LocalDate.now()));
-        return result.id;
-    }
+//    @GetMapping("/mongotest")
+//    public String writeGetMessage(){
+//        Message result = messageRepository.save(new Message("hi", LocalDate.now()));
+//        return result.id;
+//    }
 }
