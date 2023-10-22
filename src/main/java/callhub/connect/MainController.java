@@ -1,6 +1,6 @@
 package callhub.connect;
 
-import callhub.connect.entities.Message;
+import callhub.connect.entity.Message;
 import callhub.connect.use_case.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -16,7 +16,7 @@ public class MainController {
     MessageRepository messageRepository;
     @GetMapping("/")
     public String home() {
-        return "meowwwwwww :3";
+        return "meowwwwwww :D";
     }
 
     @GetMapping("/mongotest")

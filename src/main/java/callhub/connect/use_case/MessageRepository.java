@@ -1,5 +1,5 @@
 package callhub.connect.use_case;
-import callhub.connect.entities.Message;
+import callhub.connect.entity.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
