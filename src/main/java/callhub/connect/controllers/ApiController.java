@@ -1,4 +1,4 @@
-package callhub.connect;
+package callhub.connect.controllers;
 
 import org.springframework.web.bind.annotation.*;
 
