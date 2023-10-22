@@ -16,7 +16,7 @@ public class MainController {
     MessageRepository messageRepository;
     @GetMapping("/")
     public String home() {
-        return "meowwwwwww :D";
+        return "New New Deployment!";
     }
 
     @GetMapping("/mongotest")
