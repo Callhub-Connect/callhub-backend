@@ -16,7 +16,7 @@ public class MainController {
     MessageRepository messageRepository;
     @GetMapping("/")
     public String home() {
-        return "New New Deployment!"
+        return "New New Deployment!";
     }
 
 
