@@ -22,7 +22,6 @@ public class FileController {
         String currentDirectory = System.getProperty("user.dir");
         String pathName = currentDirectory + "/src/main/java/callhub/connect/pdfs/fall2023.pdf";
         FileDocument result;
-        // file limit exceed
         try {
             byte[] pdfEncoded = LocalDataAccess.convertPDFToByteArray(pathName);
             Binary data = LocalDataAccess.byteArrayToBinary(pdfEncoded);
@@ -30,26 +29,6 @@ public class FileController {
             return "Uploaded! " + result.id;
         } catch (IOException e) {
             return e.getMessage();
-        }
-    }
-
-    @GetMapping("/checkFiles")
-    public void checkPDFS() {
-        String currentDirectory = System.getProperty("user.dir");
-        File directory = new File(currentDirectory + "/src/main/java/callhub/connect");
-
-        // Check if the given path is a directory
-        if (directory.isDirectory()) {
-            File[] subdirectories = directory.listFiles(File::isDirectory);
-
-            if (subdirectories != null) {
-                System.out.println("Directories in the current working directory:");
-                for (File subdir : subdirectories) {
-                    System.out.println(subdir.getName());
-                }
-            }
-        } else {
-            System.out.println("The current working directory is not a directory.");
         }
     }
 }
