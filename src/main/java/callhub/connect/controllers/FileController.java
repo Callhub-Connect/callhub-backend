@@ -2,12 +2,10 @@ package callhub.connect.controllers;
 import callhub.connect.data_access.DocumentRepository;
 import callhub.connect.data_access.LocalDataAccess;
 import callhub.connect.entities.FileDocument;
-import callhub.connect.entities.exceptions.FileLimitExceededException;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
