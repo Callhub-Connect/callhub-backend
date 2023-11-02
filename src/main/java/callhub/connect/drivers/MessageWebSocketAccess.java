@@ -1,10 +1,10 @@
-package callhub.connect.controllers;
+package callhub.connect.drivers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class MessageController {
+public class MessageWebSocketAccess {
 
     @MessageMapping("/message")
     @SendTo("/topic/messages")
