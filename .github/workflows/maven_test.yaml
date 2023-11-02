@@ -30,3 +30,6 @@ jobs:
 
     - name: Verify with Maven
       run: mvn verify
+
+    - name: Test with Maven
+      run: mvn test
