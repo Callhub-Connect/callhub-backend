@@ -8,17 +8,23 @@ import org.bson.types.Binary;
 @Document("documents")
 public class FileDocument {
     @Id
-    public String id;
+    private String id;
 
     public String name;
-    public Binary content;
+    private final Binary content;
     public LocalDate timeStamp;
 
-    public FileDocument(String name, Binary content, LocalDate date) {
+    public FileDocument(String name, Binary content, LocalDate timeStamp) {
         this.content = content;
         this.name = name;
-        this.timeStamp = date;
+        this.timeStamp = timeStamp;
     }
 
+    public String getId() {
+        return this.id;
+    }
 
+    public Binary getContent() {
+        return this.content;
+    }
 }

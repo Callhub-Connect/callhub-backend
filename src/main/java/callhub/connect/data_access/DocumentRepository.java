@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface DocumentRepository extends MongoRepository<FileDocument, String>{
-    // to implement, not sure what to have for custom queries
+    // implement custom query
 }
