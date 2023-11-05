@@ -61,10 +61,10 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    public Object findDocumentByID (@PathVariable String id) {
+    public Object findDocumentByID(@PathVariable String id) {
         Optional<FileDocument> item = documentRepository.findById(id);
         if (item.isEmpty()) {
-            return "item could not be found.";
+            return new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST);
         } else {
             // decode Binary to byte[] and return as a pdf
             Binary data = item.get().getContent();
