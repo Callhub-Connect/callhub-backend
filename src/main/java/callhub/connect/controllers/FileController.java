@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -61,7 +60,7 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    public Object findDocumentByID(@PathVariable String id) {
+    public ResponseEntity<Object> findDocumentByID(@PathVariable String id) {
         Optional<FileDocument> item = documentRepository.findById(id);
         if (item.isEmpty()) {
             return new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST);
