@@ -12,8 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan
 public class CallhubconnectApplication {
 
 	@Value("${azure}")
@@ -28,10 +26,15 @@ public class CallhubconnectApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("azureEndpoint");
-				registry.addMapping("/**").allowedOrigins("http://localhost:8080/");
-				registry.addMapping("/**").allowedOrigins("http://localhost:3000/");
-				registry.addMapping("/**").allowedOrigins("https://callhub.netlify.app/");
+				registry.addMapping("/**").
+						allowedOrigins(
+								"http://localhost:8080",
+								"http://localhost:3000",
+								"https://callhub.netlify.app",
+								azureEndpoint // Use the actual value of azureEndpoint
+						).allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}
