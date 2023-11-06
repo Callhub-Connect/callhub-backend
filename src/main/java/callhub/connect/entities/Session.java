@@ -12,7 +12,7 @@ public class Session {
     private String id;
 
     private String code;
-    private Timestamp startTime;
+    private java.util.Date startTime;
 
     private boolean active;
     private ArrayList<Message> messages;
@@ -21,7 +21,7 @@ public class Session {
     public Session(boolean active, String code){
         this.active = active;
         this.messages = new ArrayList<Message>();
-        this.startTime = new Timestamp(System.currentTimeMillis());
+        this.startTime = new java.util.Date(System.currentTimeMillis());
         this.code = code;
     }
 

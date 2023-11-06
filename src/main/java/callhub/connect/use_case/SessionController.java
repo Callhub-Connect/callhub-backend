@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import java.util.HashMap;
 public class SessionController {
 
     public SessionRepository sessionRepository;
+    private static final Gson gson = new Gson();
 
     private final static int CODE_LENGTH = 6;
 
@@ -33,13 +35,22 @@ public class SessionController {
     @GetMapping("/new-session")
     public ResponseEntity<String> newSession() {
         HttpHeaders headers = new HttpHeaders();
-        Session result = sessionRepository.save(new Session(true, generateSessionCode()));
-
+        Session session = sessionRepository.save(new Session(true, generateSessionCode()));
         // Create response
-        Gson gson = new Gson();
         HashMap<String, String> responseBody = new HashMap<>();
-        responseBody.put("sessionCode", result.getCode());
-        responseBody.put("sessionId", result.getId());
+        responseBody.put("sessionCode", session.getCode());
+        responseBody.put("sessionId", session.getId());
+        return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/join/{code}")
+    public ResponseEntity<String> joinSession(@PathVariable String code) {
+        HttpHeaders headers = new HttpHeaders();
+        Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+        // Create response
+        HashMap<String, String> responseBody = new HashMap<>();
+        responseBody.put("sessionCode", session.getCode());
+        responseBody.put("sessionId", session.getId());
         return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
     }
 
