@@ -1,5 +1,6 @@
 package callhub.connect.drivers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,12 +11,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
+    @Value("${azure}")
+    private String azureEndpoint;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry
                                                registry) {
         registry.addEndpoint("/mywebsockets")
-                .setAllowedOrigins("*");
+                .setAllowedOrigins("http://localhost:3000/", azureEndpoint);
     }
 
     @Override
