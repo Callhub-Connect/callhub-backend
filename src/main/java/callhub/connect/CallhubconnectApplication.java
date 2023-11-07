@@ -12,8 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan
 public class CallhubconnectApplication {
 
 	@Value("${azure}")
@@ -37,6 +35,7 @@ public class CallhubconnectApplication {
 				).allowedMethods("GET", "POST", "PUT", "DELETE")
 				.allowedHeaders("*")
 				.allowCredentials(true);
+
 			}
 		};
 	}
