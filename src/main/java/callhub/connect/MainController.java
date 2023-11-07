@@ -19,6 +19,7 @@ public class MainController {
         return "New New Deployment!";
     }
 
+
     @GetMapping("/mongotest")
     public String writeGetMessage(){
         Message result = messageRepository.save(new Message("hi", LocalDate.now()));
