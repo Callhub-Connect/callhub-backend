@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    env:
+        azure: ${{ secrets.AZURE }}
 
     steps:
     - name: Checkout code
