@@ -18,11 +18,4 @@ public class MainController {
     public String home() {
         return "New New Deployment!";
     }
-
-
-    @GetMapping("/mongotest")
-    public String writeGetMessage(){
-        Message result = messageRepository.save(new Message("hi", LocalDate.now()));
-        return result.id;
-    }
 }
