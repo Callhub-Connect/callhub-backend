@@ -99,22 +99,21 @@ class FileControllerTests {
         mockMvc.perform(multipartRequest).andExpect(status().isBadRequest());
     }
 
-// ONLY WORKS IF ID IS SET PUBLIC...
-//
-//    @Test
-//    void testFindDocumentByID() throws Exception {
-//        FileDocument fileDocument = new FileDocument(
-//                "MockFile",
-//                new Binary("This is the file content".getBytes()),
-//                LocalDate.now());
-//
-//        fileDocument.id = "123314";
-//
-//        when(documentRepository.findById(any())).thenReturn(Optional.of(fileDocument));
-//
-//        RequestBuilder request = get("/files/{id}", fileDocument.id);
-//        mockMvc.perform(request).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_PDF_VALUE));
-//    }
+    @Test
+    void testFindDocumentByID() throws Exception {
+        FileDocument fileDocument = new FileDocument(
+                "MockFile",
+                new Binary("This is the file content".getBytes()),
+                LocalDate.now());
+
+        fileDocument.setId("123314");
+
+        when(documentRepository.findById(any())).thenReturn(Optional.of(fileDocument));
+
+        RequestBuilder request = get("/files/{id}", fileDocument.getId());
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF_VALUE));
+    }
 
     @Test
     void testFindDocumentByID_InvalidID() throws Exception {

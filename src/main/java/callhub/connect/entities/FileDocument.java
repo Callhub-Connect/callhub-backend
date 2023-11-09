@@ -24,6 +24,8 @@ public class FileDocument {
         return this.id;
     }
 
+    public void setId(String id) { this.id = id; }
+
     public Binary getContent() {
         return this.content;
     }
