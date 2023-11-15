@@ -8,14 +8,30 @@ import java.time.LocalDate;
 public class Message {
 
     @Id
-    public String id;
+    private String id;
+    private String content;
+    private LocalDate timeStamp;
+    private String userId;
 
-    public String content;
-    public LocalDate timeStamp;
-    public String userId;
+    private Sender sender;
 
-    public Message(String content, LocalDate timeStamp) {
+    public Message(String content, LocalDate timeStamp, Sender sender) {
         this.content = content;
         this.timeStamp = timeStamp;
+        this.sender = sender;
+    }
+
+    public Message(String content, Sender sender) {
+        this.content = content;
+        this.timeStamp = LocalDate.now();
+        this.sender = sender;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
