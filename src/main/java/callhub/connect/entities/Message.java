@@ -12,18 +12,20 @@ public class Message {
     private String content;
     private LocalDate timeStamp;
     private String userId;
-
+    private String sessionId;
     private Sender sender;
 
-    public Message(String content, LocalDate timeStamp, Sender sender) {
+    public Message(String content, LocalDate timeStamp, String sessionId, Sender sender) {
         this.content = content;
         this.timeStamp = timeStamp;
+        this.sessionId = sessionId;
         this.sender = sender;
     }
 
-    public Message(String content, Sender sender) {
+    public Message(String content, String sessionId, Sender sender) {
         this.content = content;
         this.timeStamp = LocalDate.now();
+        this.sessionId = sessionId;
         this.sender = sender;
     }
 
