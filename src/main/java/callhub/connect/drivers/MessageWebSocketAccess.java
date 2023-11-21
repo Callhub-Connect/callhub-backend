@@ -19,26 +19,25 @@ public class MessageWebSocketAccess {
     @MessageMapping("/message-customer/{sessionId}")
     @SendTo("/topic/message-employee/{sessionId}")
     public String sendMessageCustomer(@DestinationVariable String sessionId, String message) throws Exception {
-        System.out.println(message);
-        HashMap<String, String> response = new HashMap<>();
-        LocalDateTime timestamp = LocalDateTime.now();
-
-        response.put("message", message);
-        response.put("timestamp", timestamp.format(TIME_FORMATTER).replace("a.m.", "AM").replace("p.m.","PM"));
-
-        System.out.println(gson.toJson(response));
+        HashMap<String, String> response = generateResponse(message);
         return gson.toJson(response);
     }
 
     @MessageMapping("/message-employee/{sessionId}")
     @SendTo("/topic/message-customer/{sessionId}")
     public String sendMessageEmployee(@DestinationVariable String sessionId, String message) throws Exception {
+        HashMap<String, String> response = generateResponse(message);
+        return gson.toJson(response);
+    }
+
+    private HashMap<String, String> generateResponse(String message){
         HashMap<String, String> response = new HashMap<>();
         LocalDateTime timestamp = LocalDateTime.now();
 
         response.put("message", message);
-        response.put("timestamp", timestamp.format(TIME_FORMATTER));
-        return gson.toJson(response);
+        response.put("timestamp", timestamp.format(TIME_FORMATTER).replace("a.m.", "AM").replace("p.m.","PM"));
+
+        return response;
     }
 
 }
