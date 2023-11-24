@@ -1,9 +1,11 @@
 package callhub.connect;
 
+import callhub.connect.data_access.MessageDataAccess;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,11 @@ public class CallhubconnectApplication {
 
 			}
 		};
+	}
+
+	@Bean
+	public MessageDataAccess messageDataAccess(ApplicationContext context) {
+		return new MessageDataAccess(context);
 	}
 
 }
