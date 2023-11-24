@@ -38,6 +38,9 @@ public class Session {
     public void addDocument(String fileID) {
         documents.add(fileID);
     }
-
+  
+    public ArrayList<Message> getMessages() {
+        return this.messages;
+    }
 
 }
