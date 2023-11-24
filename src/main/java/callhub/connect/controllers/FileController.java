@@ -78,7 +78,7 @@ public class FileController {
     }
 
     // saves PDF to documents collection and links PDF id to session
-    @PatchMapping("/session_add_pdf")
+    @PostMapping("/session_add_pdf")
     public ResponseEntity<Object> addPDFToSession(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, @RequestParam("session") String code) {
         boolean sessionExists = sessionRepository.existsById(code);
         if (!sessionExists) {
@@ -100,7 +100,7 @@ public class FileController {
             sessionRepository.save(currentSession);
             return new ResponseEntity<>("Successfully linked PDF to session.", headers, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("idk what failed help", headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         }
     }
 }
