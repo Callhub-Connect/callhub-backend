@@ -1,4 +1,4 @@
-package callhub.connect.interface_adapter;
+package callhub.connect.interface_adapter.session;
 
 import callhub.connect.use_case.session.SessionOutputBoundary;
 import callhub.connect.use_case.session.SessionOutputData;

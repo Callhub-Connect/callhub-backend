@@ -1,4 +1,4 @@
-package callhub.connect.interface_adapter;
+package callhub.connect.interface_adapter.session;
 
 import callhub.connect.data_access.MessageRepository;
 import callhub.connect.data_access.SessionRepository;
