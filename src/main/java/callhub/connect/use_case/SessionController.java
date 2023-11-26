@@ -54,6 +54,13 @@ public class SessionController {
         return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/transcript/{code}")
+    public ResponseEntity<String> getTranscript(@PathVariable String code) {
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<>("sample transcript", headers, HttpStatus.OK);
+    }
+
+
     private String generateSessionCode(){
         final String ALLOWED_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom random = new SecureRandom();
