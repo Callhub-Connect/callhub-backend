@@ -57,9 +57,14 @@ public class SessionController {
     @GetMapping("/transcript/{code}")
     public ResponseEntity<String> getTranscript(@PathVariable String code) {
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>("sample transcript", headers, HttpStatus.OK);
+        Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+        ArrayList<Message> messagesList = session.getMessages();
+        StringBuilder transcript = new StringBuilder();
+        for (Message message : messagesList) {
+            transcript.append(message.formattedMessage());
+        }
+        return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
     }
-
 
     private String generateSessionCode(){
         final String ALLOWED_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

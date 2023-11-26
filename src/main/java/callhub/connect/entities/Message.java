@@ -46,6 +46,6 @@ public class Message {
     }
 
     public String formattedMessage() {
-        return String.format("%s %s", this.getTimeStampString(), this.content);
+        return String.format("%s %s: %s", this.getTimeStampString(), this.sender.name(), this.content);
     }
 }
