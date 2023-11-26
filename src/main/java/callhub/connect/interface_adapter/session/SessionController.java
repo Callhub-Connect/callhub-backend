@@ -1,15 +1,8 @@
 package callhub.connect.interface_adapter.session;
 
-import callhub.connect.data_access.MessageRepository;
-import callhub.connect.data_access.SessionRepository;
-import callhub.connect.entities.Message;
-import callhub.connect.entities.Session;
 import callhub.connect.use_case.session.SessionInputBoundary;
 import callhub.connect.use_case.session.SessionInputData;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

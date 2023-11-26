@@ -1,4 +1,4 @@
-package callhub.connect.data_access;
+package callhub.connect.data_access.message_data_access;
 
 import callhub.connect.use_case.message.MessageDataAccessInterface;
 import org.springframework.beans.factory.annotation.Autowired;

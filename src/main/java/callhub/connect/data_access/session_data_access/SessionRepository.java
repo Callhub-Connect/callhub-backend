@@ -1,4 +1,4 @@
-package callhub.connect.data_access;
+package callhub.connect.data_access.session_data_access;
 
 import callhub.connect.entities.Session;
 import org.springframework.data.mongodb.repository.MongoRepository;

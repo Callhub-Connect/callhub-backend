@@ -1,8 +1,7 @@
-package callhub.connect.data_access;
+package callhub.connect.data_access.session_data_access;
 
 import callhub.connect.entities.Session;
 import callhub.connect.use_case.session.SessionDataAccessInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
