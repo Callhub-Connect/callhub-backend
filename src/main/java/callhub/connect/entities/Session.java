@@ -33,4 +33,8 @@ public class Session {
         return code;
     }
 
+    public ArrayList<Message> getMessages() {
+        return this.messages;
+    }
+
 }
