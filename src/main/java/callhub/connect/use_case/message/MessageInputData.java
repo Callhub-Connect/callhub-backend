@@ -9,5 +9,7 @@ public class MessageInputData {
         this.message = message;
     }
 
-    public String getMessage() {return this.message;}
+    public String getMessage() {
+        return this.message;
+    }
 }

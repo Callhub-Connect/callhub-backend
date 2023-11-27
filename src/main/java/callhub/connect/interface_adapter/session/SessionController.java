@@ -17,7 +17,8 @@ public class SessionController {
     private SessionInputBoundary sessionInteractor;
 
     @GetMapping("/new-session")
-    public ResponseEntity<String> newSession() {return sessionInteractor.newSession();
+    public ResponseEntity<String> newSession() {
+        return sessionInteractor.newSession();
     }
 
     @GetMapping("/join/{code}")
@@ -25,5 +26,4 @@ public class SessionController {
         SessionInputData inputData = new SessionInputData(code);
         return sessionInteractor.joinSession(inputData);
     }
-
 }

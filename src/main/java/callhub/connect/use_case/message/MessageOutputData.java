@@ -5,7 +5,11 @@ import java.util.HashMap;
 public class MessageOutputData {
     private final HashMap<String, String> responseBody;
 
-    public MessageOutputData(HashMap<String, String> responseBody) {this.responseBody = responseBody;}
+    public MessageOutputData(HashMap<String, String> responseBody) {
+        this.responseBody = responseBody;
+    }
 
-    public HashMap<String, String> getResponseBody() {return this.responseBody;}
+    public HashMap<String, String> getResponseBody() {
+        return this.responseBody;
+    }
 }

@@ -9,5 +9,7 @@ import java.util.HashMap;
 @Service
 public class MessagePresenter implements MessageOutputBoundary {
     @Override
-    public HashMap<String, String> getMessage(MessageOutputData outputData) {return outputData.getResponseBody();}
+    public HashMap<String, String> getMessage(MessageOutputData outputData) {
+        return outputData.getResponseBody();
+    }
 }
