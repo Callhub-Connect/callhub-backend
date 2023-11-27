@@ -1,11 +1,9 @@
 package callhub.connect.use_case;
 
-import callhub.connect.data_access.MessageRepository;
 import callhub.connect.data_access.SessionRepository;
 import callhub.connect.entities.Message;
 import callhub.connect.entities.Session;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -61,7 +58,7 @@ public class SessionController {
         ArrayList<Message> messagesList = session.getMessages();
         StringBuilder transcript = new StringBuilder();
         for (Message message : messagesList) {
-            transcript.append(message.formattedMessage());
+            transcript.append(message.formattedMessage()).append("\n");
         }
         return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
     }
