@@ -1,4 +1,4 @@
-package callhub.connect.data_access.message_data_access;
+package callhub.connect.data_access;
 import callhub.connect.entities.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
