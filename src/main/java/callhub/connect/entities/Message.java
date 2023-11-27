@@ -11,10 +11,10 @@ public class Message {
     @Id
     private String id;
     private String content;
-    private final LocalTime timeStamp;
+    private LocalTime timeStamp;
     private String userId;
-    private final String sessionId;
-    private final Sender sender;
+    private String sessionId;
+    private Sender sender;
 
     public Message(){}
 
