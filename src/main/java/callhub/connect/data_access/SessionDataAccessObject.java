@@ -1,5 +1,6 @@
 package callhub.connect.data_access;
 
+import callhub.connect.entities.Message;
 import callhub.connect.entities.Session;
 import callhub.connect.use_case.session.SessionDataAccessInterface;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,13 @@ public class SessionDataAccessObject implements SessionDataAccessInterface {
 
         return responseBody;
     }
+
+    public void addMessageToSession(String sessionId, Message message){
+            Session currentSession = sessionRepository.findById(sessionId).orElseThrow();
+            currentSession.addMessage(message);
+            sessionRepository.save(currentSession);
+    }
+
     private String generateSessionCode(){
         final String ALLOWED_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom random = new SecureRandom();
