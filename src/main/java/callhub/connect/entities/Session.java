@@ -37,4 +37,8 @@ public class Session {
         return this.messages;
     }
 
+    public void addMessage(Message message){
+        messages.add(message);
+    }
+
 }

@@ -16,6 +16,8 @@ public class Message {
     private final String sessionId;
     private final Sender sender;
 
+    public Message(){}
+
     public Message(String content, LocalTime timeStamp, String sessionId, Sender sender) {
         this.content = content;
         this.timeStamp = timeStamp;
