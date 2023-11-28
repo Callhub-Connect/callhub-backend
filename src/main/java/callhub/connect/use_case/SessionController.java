@@ -51,16 +51,35 @@ public class SessionController {
         return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves the transcript of messages for a given session code.
+     *
+     * @param code The session code to identify the session.
+     * @return A ResponseEntity containing the transcript of messages as a String.
+     *         If the session or messages are not found, an empty transcript is returned.
+     */
     @GetMapping("/transcript/{code}")
     public ResponseEntity<String> getTranscript(@PathVariable String code) {
         HttpHeaders headers = new HttpHeaders();
-        Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
-        ArrayList<Message> messagesList = session.getMessages();
-        StringBuilder transcript = new StringBuilder();
-        for (Message message : messagesList) {
-            transcript.append(message.formattedMessage()).append("\n");
+        boolean sessionExists = sessionRepository.existsById(code);
+        if (!sessionExists) {
+            new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
+
+        try {
+            Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+            ArrayList<Message> messagesList = session.getMessages();
+
+            // assume all messages are sent on the same day
+            Message firstMessage = messagesList.get(0);
+            StringBuilder transcript = new StringBuilder(firstMessage.getDateString());
+            for (Message message : messagesList) {
+                transcript.append("\n").append(message.formattedMessage());
+            }
+            return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private String generateSessionCode(){
