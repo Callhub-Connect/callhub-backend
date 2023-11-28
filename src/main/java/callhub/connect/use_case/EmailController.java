@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/transcript")
+@RequestMapping("/email")
 public class EmailController {
 
     public SessionRepository sessionRepository;
@@ -23,15 +23,14 @@ public class EmailController {
         this.sessionRepository = sessionRepository;
     }
 
-
     /**
      * Retrieves the transcript of messages for a given session code.
      *
      * @param code The session code to identify the session.
      * @return A ResponseEntity containing the transcript of messages as a String.
-     * If the session or messages are not found, an empty transcript is returned.
+     * If the session is not found, an error occurs.
      */
-    @GetMapping("/{code}")
+    @GetMapping("/transcript/{code}")
     public ResponseEntity<String> getTranscript(@PathVariable String code) {
         HttpHeaders headers = new HttpHeaders();
         boolean sessionExists = sessionRepository.existsById(code);
@@ -43,13 +42,38 @@ public class EmailController {
             Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
             ArrayList<Message> messagesList = session.getMessages();
 
-            // assume all messages are sent on the same day
-            Message firstMessage = messagesList.get(0);
-            StringBuilder transcript = new StringBuilder(firstMessage.getDateString());
+            StringBuilder transcript = new StringBuilder();
             for (Message message : messagesList) {
-                transcript.append("\n").append(message.formattedMessage());
+                transcript.append(message.formattedMessage()).append("\n");
             }
             return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Retrieves the date messages were sent for a given session code, assuming all messages
+     * were sent on the same day as the first message.
+     *
+     * @param code The session code to identify the session.
+     * @return A ResponseEntity containing the date of messages as a String.
+     * If the session is not found, an error occurs.
+     */
+    @GetMapping("/date/{code}")
+    public ResponseEntity<String> getDate(@PathVariable String code) {
+        HttpHeaders headers = new HttpHeaders();
+        boolean sessionExists = sessionRepository.existsById(code);
+        if (!sessionExists) {
+            new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+            ArrayList<Message> messagesList = session.getMessages();
+
+            Message firstMessage = messagesList.get(0);
+            return new ResponseEntity<>(firstMessage.getDateString(), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         }
