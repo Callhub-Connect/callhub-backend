@@ -98,7 +98,7 @@ public class FileController {
             Session currentSession = sessionRepository.getSessionsByActiveAndCode(true, code);
             currentSession.addDocument(result.getId());
             sessionRepository.save(currentSession);
-            return new ResponseEntity<>("Successfully linked PDF to session.", headers, HttpStatus.OK);
+            return new ResponseEntity<>(result.getId(), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         }
