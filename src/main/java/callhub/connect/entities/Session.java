@@ -41,4 +41,8 @@ public class Session {
         messages.add(message);
     }
 
+    public void setInactive(){
+        this.active = false;
+    }
+
 }

@@ -33,6 +33,17 @@ public class SessionDataAccessObject implements SessionDataAccessInterface {
 
         return responseBody;
     }
+
+    @Override
+    public HashMap<String, String> endSession(String code) {
+        Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+        // end session
+        session.setInactive();
+        sessionRepository.save(session);
+        HashMap<String, String> responseBody = new HashMap<>();
+        return responseBody;
+    }
+
     private String generateSessionCode(){
         final String ALLOWED_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom random = new SecureRandom();

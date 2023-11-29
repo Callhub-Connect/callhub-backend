@@ -7,4 +7,5 @@ import java.util.HashMap;
 public interface SessionDataAccessInterface {
     public HashMap<String, String> generateNewSession();
     public HashMap<String, String> joinSession(String code);
+    public HashMap<String, String> endSession(String code);
 }
