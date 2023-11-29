@@ -1,56 +1,38 @@
-package callhub.connect.use_case;
+package callhub.connect.data_access;
 
-import callhub.connect.data_access.SessionRepository;
-import callhub.connect.entities.Message;
 import callhub.connect.entities.Session;
-import com.google.gson.Gson;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import callhub.connect.use_case.session.SessionDataAccessInterface;
+import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-@RestController
-@RequestMapping("/session")
-public class SessionController {
-
-    public SessionRepository sessionRepository;
-    private static final Gson gson = new Gson();
-
+@Service
+public class SessionDataAccessObject implements SessionDataAccessInterface {
+    private final SessionRepository sessionRepository;
     private final static int CODE_LENGTH = 6;
 
-    public SessionController(SessionRepository sessionRepository){
+    public SessionDataAccessObject(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
-
-    @GetMapping("/new-session")
-    public ResponseEntity<String> newSession() {
-        HttpHeaders headers = new HttpHeaders();
+    public HashMap<String, String> generateNewSession() {
         Session session = sessionRepository.save(new Session(true, generateSessionCode()));
         // Create response
         HashMap<String, String> responseBody = new HashMap<>();
         responseBody.put("sessionCode", session.getCode());
         responseBody.put("sessionId", session.getId());
-        return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
+        return responseBody;
     }
 
-    @GetMapping("/join/{code}")
-    public ResponseEntity<String> joinSession(@PathVariable String code) {
-        HttpHeaders headers = new HttpHeaders();
+    public HashMap<String, String> joinSession(String code) {
         Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
         // Create response
         HashMap<String, String> responseBody = new HashMap<>();
         responseBody.put("sessionCode", session.getCode());
         responseBody.put("sessionId", session.getId());
-        return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
-    }
 
+        return responseBody;
+    }
     private String generateSessionCode(){
         final String ALLOWED_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom random = new SecureRandom();
@@ -64,6 +46,4 @@ public class SessionController {
 
         return code.toString();
     }
-
-
 }
