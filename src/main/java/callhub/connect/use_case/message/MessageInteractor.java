@@ -23,6 +23,7 @@ public class MessageInteractor implements MessageInputBoundary {
     @Override
     public HashMap<String, String> newMessage(MessageInputData inputData) {
         HashMap<String, String> response = messageDataAccessObject.generateResponse(inputData.getMessage());
+        messageDataAccessObject.sendResponseToDatabase(inputData.getMessage(), inputData.getSessionId(), inputData.getSender());
         MessageOutputData outputData = new MessageOutputData(response);
         return outputData.getResponseBody();
     }

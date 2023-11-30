@@ -1,7 +1,9 @@
 package callhub.connect.controllers;
 
 import callhub.connect.data_access.DocumentRepository;
+import callhub.connect.data_access.SessionRepository;
 import callhub.connect.entities.FileDocument;
+import callhub.connect.entities.Session;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FileControllerTests {
     @MockBean
     public DocumentRepository documentRepository;
+
+    @MockBean
+    public SessionRepository sessionRepository;
 
     @Autowired
     MockMvc mockMvc;
@@ -119,5 +124,59 @@ class FileControllerTests {
     void testFindDocumentByID_InvalidID() throws Exception {
         RequestBuilder request = get("/files/12345678");
         mockMvc.perform(request).andExpect(status().isBadRequest()).andExpect(content().string("File could not be found."));
+    }
+
+    @Test
+    void testPDFLinkValidSession() throws Exception {
+        String currentDirectory = System.getProperty("user.dir");
+        String pathName = currentDirectory + "/src/main/java/callhub/connect/pdfs/fall2023.pdf";
+        File pdfFile = new File(pathName);
+        MockMultipartFile sampleFile = new MockMultipartFile(
+                "file",
+                pdfFile.getName(),
+                "application/pdf",
+                new FileInputStream(pdfFile));
+
+
+        when(documentRepository.save(any())).thenReturn(new FileDocument(
+                "MockFile",
+                new Binary("sample pdf content".getBytes()),
+                LocalDate.now()));
+
+        Session mockSession = new Session(true, "ABCDEF");
+
+        // Mock the behavior of the sessionRepository.save() method
+        when(sessionRepository.getSessionsByActiveAndCode(true, "ABCDEF")).thenReturn(mockSession);
+
+        MockMultipartHttpServletRequestBuilder multipartRequest =
+                MockMvcRequestBuilders.multipart("/files/session_add_pdf");
+        mockMvc.perform(multipartRequest.file(sampleFile).param("session", "ABCDEF").param("name", "MockFile")).andExpect(status().isOk());
+    }
+
+    @Test
+    void testPDFLinkInvalidSession() throws Exception {
+        String currentDirectory = System.getProperty("user.dir");
+        String pathName = currentDirectory + "/src/main/java/callhub/connect/pdfs/fall2023.pdf";
+        File pdfFile = new File(pathName);
+        MockMultipartFile sampleFile = new MockMultipartFile(
+                "file",
+                pdfFile.getName(),
+                "application/pdf",
+                new FileInputStream(pdfFile));
+
+
+        when(documentRepository.save(any())).thenReturn(new FileDocument(
+                "MockFile",
+                new Binary("sample pdf content".getBytes()),
+                LocalDate.now()));
+
+        Session mockSession = new Session(true, "ABCDEF");
+
+        // Mock the behavior of the sessionRepository.save() method
+        when(sessionRepository.getSessionsByActiveAndCode(true, "ABCDEF")).thenReturn(mockSession);
+
+        MockMultipartHttpServletRequestBuilder multipartRequest =
+                MockMvcRequestBuilders.multipart("/files/session_add_pdf");
+        mockMvc.perform(multipartRequest.file(sampleFile).param("session", "123456").param("name", "MockFile")).andExpect(status().isBadRequest());
     }
 }
