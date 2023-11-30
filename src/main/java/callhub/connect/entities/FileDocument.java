@@ -31,4 +31,12 @@ public class FileDocument {
     public Binary getContent() {
         return this.content;
     }
+
+    public void setContent(Binary newContent) {
+        this.content = newContent;
+    }
+
+    public void setUploadDate(LocalDate now) {
+        this.timeStamp = now;
+    }
 }
