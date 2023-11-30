@@ -1,5 +1,6 @@
 package callhub.connect.interface_adapter.message;
 
+import callhub.connect.entities.Sender;
 import callhub.connect.use_case.message.MessageInputBoundary;
 import callhub.connect.use_case.message.MessageInputData;
 import callhub.connect.use_case.message.MessageInteractor;
@@ -22,7 +23,7 @@ public class MessageController {
     @MessageMapping("/message-customer/{sessionId}")
     @SendTo("/topic/message-employee/{sessionId}")
     public String sendMessageCustomer(@DestinationVariable String sessionId, String message) throws Exception {
-        MessageInputData inputData = new MessageInputData(sessionId, message);
+        MessageInputData inputData = new MessageInputData(sessionId, message, Sender.CUSTOMER);
         HashMap<String, String> response = messageInteractor.newMessage(inputData);
         return gson.toJson(response);
     }
@@ -30,7 +31,7 @@ public class MessageController {
     @MessageMapping("/message-employee/{sessionId}")
     @SendTo("/topic/message-customer/{sessionId}")
     public String sendMessageEmployee(@DestinationVariable String sessionId, String message) throws Exception {
-        MessageInputData inputData = new MessageInputData(sessionId, message);
+        MessageInputData inputData = new MessageInputData(sessionId, message, Sender.EMPLOYEE);
         HashMap<String, String> response = messageInteractor.newMessage(inputData);
         return gson.toJson(response);
     }
