@@ -19,6 +19,11 @@ public class CallhubconnectApplication {
 		SpringApplication.run(CallhubconnectApplication.class, args);
 	}
 
+	/**
+	 * Configures Cross-Origin Resource Sharing (CORS) for the Callhub application.
+	 *
+	 * @return A WebMvcConfigurer object that defines CORS configuration for the application.
+	 */
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
