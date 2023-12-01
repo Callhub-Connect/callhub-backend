@@ -26,6 +26,11 @@ public class SessionInteractor implements SessionInputBoundary{
         this.sessionPresenter = sessionPresenter;
     }
 
+    /**
+     * Creates a new session and returns a ResponseEntity containing the response data.
+     *
+     * @return ResponseEntity containing the response data for the newly created session with an HTTP status of OK.
+     */
     @Override
     public ResponseEntity<String> newSession() {
         HttpHeaders headers = new HttpHeaders();
@@ -34,6 +39,12 @@ public class SessionInteractor implements SessionInputBoundary{
         return new ResponseEntity<>(gson.toJson(sessionPresenter.getResponse(outputData)), headers, HttpStatus.OK);
     }
 
+    /**
+     * Joins an existing session with the provided session code and returns a ResponseEntity containing the response data.
+     *
+     * @param inputData The SessionInputData object containing the session code to join.
+     * @return ResponseEntity containing the response data for joining the session with an HTTP status of OK.
+     */
     @Override
     public ResponseEntity<String> joinSession(SessionInputData inputData) {
         HttpHeaders headers = new HttpHeaders();
