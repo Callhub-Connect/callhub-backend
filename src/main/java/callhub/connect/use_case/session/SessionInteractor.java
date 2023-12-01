@@ -40,4 +40,13 @@ public class SessionInteractor implements SessionInputBoundary{
         HashMap<String, String> responseBody = sessionDataAccessObject.joinSession(inputData.getCode());
         return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<String> endSession(SessionInputData inputData) {
+        HttpHeaders headers = new HttpHeaders();
+        HashMap<String, String> responseBody = sessionDataAccessObject.endSession(inputData.getCode());
+        return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
+    }
+
+
 }

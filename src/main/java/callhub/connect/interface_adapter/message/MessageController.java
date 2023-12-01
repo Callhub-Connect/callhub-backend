@@ -35,4 +35,10 @@ public class MessageController {
         HashMap<String, String> response = messageInteractor.newMessage(inputData);
         return gson.toJson(response);
     }
+
+    @MessageMapping("/end-session/{sessionId}")
+    @SendTo("/topic/end-session/{sessionId}")
+    public String endSession(@DestinationVariable String sessionId) throws Exception {
+        return "session ended";
+    }
 }

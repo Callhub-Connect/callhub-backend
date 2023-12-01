@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 public interface SessionInputBoundary {
     ResponseEntity<String> newSession();
     ResponseEntity<String> joinSession(SessionInputData inputData);
+    ResponseEntity<String> endSession(SessionInputData inputData);
 }

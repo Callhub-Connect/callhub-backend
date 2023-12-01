@@ -8,6 +8,7 @@ import java.util.HashMap;
 public interface SessionDataAccessInterface {
     public HashMap<String, String> generateNewSession();
     public HashMap<String, String> joinSession(String code);
+    public HashMap<String, String> endSession(String code);
 
     /**
      * Adds message to session with sessionId
@@ -15,4 +16,5 @@ public interface SessionDataAccessInterface {
      * @param message message to be added
      */
     public void addMessageToSession(String sessionId, Message message);
+
 }

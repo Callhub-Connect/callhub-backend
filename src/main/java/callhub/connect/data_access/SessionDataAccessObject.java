@@ -35,6 +35,16 @@ public class SessionDataAccessObject implements SessionDataAccessInterface {
         return responseBody;
     }
 
+    @Override
+    public HashMap<String, String> endSession(String code) {
+        Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+        // end session
+        session.setInactive();
+        sessionRepository.save(session);
+        HashMap<String, String> responseBody = new HashMap<>();
+        return responseBody;
+    }
+
     /**
      * Adds message to the session with sessionId in the database.
      *
