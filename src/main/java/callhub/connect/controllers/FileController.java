@@ -105,7 +105,7 @@ public class FileController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile newFile) {
+    public ResponseEntity<String> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile file) {
         Optional<FileDocument> existingFileDocumentOpt = documentRepository.findById(id);
 
         if (existingFileDocumentOpt.isEmpty()) {
@@ -113,7 +113,7 @@ public class FileController {
         }
 
         FileDocument existingFileDocument = existingFileDocumentOpt.get();
-        dataAccessObject = new NetworkDataAccess(newFile);
+        dataAccessObject = new NetworkDataAccess(file);
 
         try {
             Binary newContent = dataAccessObject.serializePDF();
