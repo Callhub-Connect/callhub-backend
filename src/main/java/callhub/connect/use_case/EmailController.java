@@ -26,20 +26,20 @@ public class EmailController {
     /**
      * Retrieves the transcript of messages for a given session code.
      *
-     * @param code The session code to identify the session.
+     * @param id The session code to identify the session.
      * @return A ResponseEntity containing the transcript of messages as a String.
      * If the session is not found, an error occurs.
      */
-    @GetMapping("/transcript/{code}")
-    public ResponseEntity<String> getTranscript(@PathVariable String code) {
+    @GetMapping("/transcript/{id}")
+    public ResponseEntity<String> getTranscript(@PathVariable String id) {
         HttpHeaders headers = new HttpHeaders();
-        boolean sessionExists = sessionRepository.existsById(code);
+        boolean sessionExists = sessionRepository.existsById(id);
         if (!sessionExists) {
-            new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
         }
 
         try {
-            Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+            Session session = sessionRepository.getSessionById(id);
             ArrayList<Message> messagesList = session.getMessages();
 
             StringBuilder transcript = new StringBuilder();
@@ -56,20 +56,20 @@ public class EmailController {
      * Retrieves the date messages were sent for a given session code, assuming all messages
      * were sent on the same day as the first message.
      *
-     * @param code The session code to identify the session.
+     * @param id The session code to identify the session.
      * @return A ResponseEntity containing the date of messages as a String.
      * If the session is not found, an error occurs.
      */
-    @GetMapping("/date/{code}")
-    public ResponseEntity<String> getDate(@PathVariable String code) {
+    @GetMapping("/date/{id}")
+    public ResponseEntity<String> getDate(@PathVariable String id) {
         HttpHeaders headers = new HttpHeaders();
-        boolean sessionExists = sessionRepository.existsById(code);
+        boolean sessionExists = sessionRepository.existsById(id);
         if (!sessionExists) {
             new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
         }
 
         try {
-            Session session = sessionRepository.getSessionsByActiveAndCode(true, code);
+            Session session = sessionRepository.getSessionById(id);
             ArrayList<Message> messagesList = session.getMessages();
 
             Message firstMessage = messagesList.get(0);
