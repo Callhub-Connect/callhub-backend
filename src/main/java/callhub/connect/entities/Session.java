@@ -16,13 +16,15 @@ public class Session {
 
     private boolean active;
     private ArrayList<Message> messages;
-    // private ArrayList<> documents;
+    private ArrayList<String> documents;
+
 
     public Session(boolean active, String code){
         this.active = active;
         this.messages = new ArrayList<Message>();
         this.startTime = new java.util.Date(System.currentTimeMillis());
         this.code = code;
+        this.documents = new ArrayList<String>();
     }
 
     public String getId() {
@@ -33,12 +35,20 @@ public class Session {
         return code;
     }
 
+    public void addDocument(String fileID) {
+        documents.add(fileID);
+    }
+  
     public ArrayList<Message> getMessages() {
         return this.messages;
     }
 
     public void addMessage(Message message){
         messages.add(message);
+    }
+
+    public void setInactive(){
+        this.active = false;
     }
 
 }

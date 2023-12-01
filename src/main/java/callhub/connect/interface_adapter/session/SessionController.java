@@ -1,5 +1,6 @@
 package callhub.connect.interface_adapter.session;
 
+import callhub.connect.entities.Session;
 import callhub.connect.use_case.session.SessionInputBoundary;
 import callhub.connect.use_case.session.SessionInputData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,11 @@ public class SessionController {
     public ResponseEntity<String> joinSession(@PathVariable String code) {
         SessionInputData inputData = new SessionInputData(code);
         return sessionInteractor.joinSession(inputData);
+    }
+
+    @GetMapping("/end-session/{code}")
+    public ResponseEntity<String> endSession(@PathVariable String code) {
+        SessionInputData inputData = new SessionInputData(code);
+        return sessionInteractor.endSession(inputData);
     }
 }
