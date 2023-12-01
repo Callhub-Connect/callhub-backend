@@ -5,8 +5,4 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 public interface MessageRepository extends MongoRepository<Message, String>{
-
-    @Query("{userId: '?0'}")
-    public List<Message> findByUserId(String userId);
-
 }
