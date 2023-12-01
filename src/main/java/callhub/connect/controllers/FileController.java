@@ -103,4 +103,28 @@ public class FileController {
             return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile file) {
+        Optional<FileDocument> existingFileDocumentOpt = documentRepository.findById(id);
+
+        if (existingFileDocumentOpt.isEmpty()) {
+            return new ResponseEntity<>("File not found.", headers, HttpStatus.NOT_FOUND);
+        }
+
+        FileDocument existingFileDocument = existingFileDocumentOpt.get();
+        dataAccessObject = new NetworkDataAccess(file);
+
+        try {
+            Binary newContent = dataAccessObject.serializePDF();
+            existingFileDocument.setContent(newContent);
+            existingFileDocument.setUploadDate(LocalDate.now()); // Update upload date if needed
+            documentRepository.save(existingFileDocument);
+            return new ResponseEntity<>("File updated successfully!", headers, HttpStatus.OK);
+        } catch (FileLimitExceededException e) {
+            return new ResponseEntity<>("File is too large.", headers, HttpStatus.PAYLOAD_TOO_LARGE);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
