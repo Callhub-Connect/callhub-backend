@@ -1,8 +1,11 @@
-package callhub.connect.controllers;
+package callhub.connect.interface_adapter.file_adapter;
 import callhub.connect.data_access.*;
 import callhub.connect.entities.FileDocument;
 import callhub.connect.entities.Session;
 import callhub.connect.entities.exceptions.FileLimitExceededException;
+import callhub.connect.use_case.file.FileDataAccessInterface;
+import callhub.connect.use_case.file.FileInputBoudary;
+import callhub.connect.use_case.message.MessageInputBoundary;
 import org.springframework.http.MediaType;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,35 +28,10 @@ public class FileController {
     @Autowired
     public SessionRepository sessionRepository;
     HttpHeaders headers = new HttpHeaders();
-    DataAccess dataAccessObject;
+    FileDataAccessInterface dataAccessObject;
 
-
-    /**
-     * Uploads a PDF document from the local file system and saves it to the document repository.
-     * IMPORTANT: deprecated only use for testing purposes
-     *
-     * @param name The name to be associated with the uploaded PDF document.
-     * @return ResponseEntity containing a message indicating successful upload along with the document's ID if successful,
-     * or an error message with an appropriate HTTP status code if an error occurs (e.g., file limit exceeded or bad request).
-     */
-    @GetMapping("/upload_local")
-    public ResponseEntity<String> uploadPDFLocal(@RequestParam("name") String name) {
-        String currentDirectory = System.getProperty("user.dir");
-        String pathName = currentDirectory + "/src/main/java/callhub/connect/pdfs/fall2023.pdf";
-        FileDocument result;
-
-        dataAccessObject = new LocalDataAccess(pathName);
-        Binary data;
-        try {
-            data = dataAccessObject.serializePDF();
-        } catch (FileLimitExceededException e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.PAYLOAD_TOO_LARGE);
-        } catch (IOException e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
-        }
-        result = documentRepository.save(new FileDocument(name, data, LocalDate.now()));
-        return new ResponseEntity<>("Uploaded! " + result.getId(), headers, HttpStatus.OK);
-    }
+    @Autowired
+    private FileInputBoudary fileInteractor;
 
     /**
      * Deprecated: This method is intended for testing purposes only.
@@ -66,7 +44,7 @@ public class FileController {
      */
     @PostMapping("/upload_network")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) {
-        dataAccessObject = new NetworkDataAccess(file);
+        dataAccessObject = new FileDataAcessObject(file);
         FileDocument result;
         Binary data;
         try {
@@ -89,7 +67,7 @@ public class FileController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Object> findDocumentByID(@PathVariable String id) {
-        Optional<FileDocument> item = documentRepository.findById(id);
+        Optional<FileDocument> item = fileInteractor.findById(id);
         if (item.isEmpty()) {
             return new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST);
         } else {
@@ -119,7 +97,7 @@ public class FileController {
             new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
         }
 
-        dataAccessObject = new NetworkDataAccess(file);
+        dataAccessObject = new FileDataAcessObject(file);
         FileDocument result = new FileDocument();
         Binary data;
         try {
@@ -142,7 +120,7 @@ public class FileController {
      * Updates an existing file document with new content provided as a MultipartFile.
      *
      * @param id       The unique identifier (ID) of the file document to be updated.
-     * @param newFile  The MultipartFile representing the new content to replace the existing file's content.
+     * @param file  The MultipartFile representing the new content to replace the existing file's content.
      * @return ResponseEntity indicating the result of the update operation, including success or appropriate error messages and HTTP status codes.
      */
     @PutMapping("/update/{id}")
@@ -154,7 +132,7 @@ public class FileController {
         }
 
         FileDocument existingFileDocument = existingFileDocumentOpt.get();
-        dataAccessObject = new NetworkDataAccess(file);
+        dataAccessObject = new FileDataAcessObject(file);
 
         try {
             Binary newContent = dataAccessObject.serializePDF();
