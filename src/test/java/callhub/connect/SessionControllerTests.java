@@ -1,12 +1,14 @@
-package callhub.connect.controllers;
+package callhub.connect;
 
 import callhub.connect.data_access.DocumentRepository;
 import callhub.connect.data_access.SessionRepository;
 import callhub.connect.entities.FileDocument;
 import callhub.connect.entities.Session;
 import callhub.connect.interface_adapter.session.SessionController;
+import callhub.connect.use_case.session.SessionInputBoundary;
 import callhub.connect.use_case.session.SessionInputData;
 import callhub.connect.use_case.session.SessionInteractor;
+import callhub.connect.use_case.session.*;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.time.LocalDate;
 
@@ -31,18 +34,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
 public class SessionControllerTests {
+
+    @Autowired
+    MockMvc mockMvc;
 
     @MockBean
     public SessionRepository sessionRepository;
 
     @MockBean
     private SessionInteractor sessionInteractor;
-
-
-    @Autowired
-    MockMvc mockMvc;
 
     @Test
     public void createSessionTest() throws Exception {
@@ -56,17 +57,51 @@ public class SessionControllerTests {
     }
 
     @Test
-    void testJoinSession() throws Exception {
+    void testJoinSession_mockRepository() throws Exception {
+        Session mockSession = new Session(true, "ABCDEF");
+        ResponseEntity<String> mockResponseEntity = ResponseEntity.ok("Joined session");
+
+        when(sessionRepository.getSessionsByActiveAndCode(anyBoolean(), anyString())).thenReturn(mockSession);
+
+        // Perform the request and verify the response
+        mockMvc.perform(get("/session/join/ABCDEF"))
+                .andExpect(status().isOk());
+    }
+
+    // hardcoded an existing session code, may not work if database was cleared!
+    @Test
+    void testJoinExistingSession() throws Exception {
+        mockMvc.perform(get("/session/join/XVK1DU")).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testJoinSession_mockInteractor() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
         ResponseEntity<String> mockResponseEntity = ResponseEntity.ok("Joined session");
 
         when(sessionInteractor.joinSession(any())).thenReturn(mockResponseEntity);
 
         // Perform the request and verify the response
-        mockMvc.perform(get("/join/ABCDEF"))
+        mockMvc.perform(get("/session/join/ABCDEF"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Joined session"));  // Add this line to check the response content;
     }
 
+    @Test
+    void testAllSession() throws Exception {
+        when(sessionRepository.save(any())).thenReturn(new Session(
+                true,
+                "ABCDEF"
+        ));
 
+        RequestBuilder newRequest = get("/session/new-session?code=ABCDEF");
+        mockMvc.perform(newRequest).andExpect(status().isOk());
+
+        RequestBuilder joinRequest = get("/session/join/ABCDEF");
+        mockMvc.perform(joinRequest).andExpect(status().isOk());
+
+        RequestBuilder endRequest = get("/session/end-session/ABCDEF");
+        mockMvc.perform(endRequest).andExpect(status().isOk());
+    }
 }
