@@ -15,11 +15,11 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/email")
-public class EmailController {
+public class EmailController_fromthepast {
 
     public SessionRepository sessionRepository;
 
-    public EmailController(SessionRepository sessionRepository) {
+    public EmailController_fromthepast(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
 
@@ -38,18 +38,14 @@ public class EmailController {
             return new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
         }
 
-        try {
-            Session session = sessionRepository.getSessionById(id);
-            ArrayList<Message> messagesList = session.getMessages();
+        Session session = sessionRepository.getSessionById(id);
+        ArrayList<Message> messagesList = session.getMessages();
 
-            StringBuilder transcript = new StringBuilder();
-            for (Message message : messagesList) {
-                transcript.append(message.formattedMessage()).append("\n");
-            }
-            return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+        StringBuilder transcript = new StringBuilder();
+        for (Message message : messagesList) {
+            transcript.append(message.formattedMessage()).append("\n");
         }
+        return new ResponseEntity<>(transcript.toString(), headers, HttpStatus.OK);
     }
 
     /**
