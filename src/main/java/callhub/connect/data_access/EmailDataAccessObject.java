@@ -3,9 +3,11 @@ package callhub.connect.data_access;
 import callhub.connect.entities.Message;
 import callhub.connect.entities.Session;
 import callhub.connect.use_case.email.EmailDataAccessInterface;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+@Service
 public class EmailDataAccessObject implements EmailDataAccessInterface {
     private final SessionRepository sessionRepository;
 

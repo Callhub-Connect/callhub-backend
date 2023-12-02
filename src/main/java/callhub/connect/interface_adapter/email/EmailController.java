@@ -22,7 +22,7 @@ public class EmailController {
         return emailInteractor.getTranscript(inputData);
     }
 
-    @GetMapping()
+    @GetMapping("/date/{id}")
     public ResponseEntity<String> getCode(@PathVariable String id) {
         EmailInputData inputData = new EmailInputData(id);
         return emailInteractor.getDate(inputData);

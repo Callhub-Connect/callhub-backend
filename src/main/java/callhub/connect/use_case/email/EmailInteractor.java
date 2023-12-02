@@ -24,7 +24,6 @@ public class EmailInteractor implements EmailInputBoundary {
     public ResponseEntity<String> getTranscript(EmailInputData inputData) {
         HttpHeaders headers = new HttpHeaders();
         String transcript = emailDataAccessObject.getTranscript(inputData.getId());
-        EmailOutputData outputData = new EmailOutputData(transcript);
         return new ResponseEntity<>(transcript, headers, HttpStatus.OK);
     }
 
@@ -32,7 +31,6 @@ public class EmailInteractor implements EmailInputBoundary {
     public ResponseEntity<String> getDate(EmailInputData inputData) {
         HttpHeaders headers = new HttpHeaders();
         String date = emailDataAccessObject.getDate(inputData.getId());
-        EmailOutputData outputData = new EmailOutputData(date);
         return new ResponseEntity<>(date, headers, HttpStatus.OK);
     }
 }
