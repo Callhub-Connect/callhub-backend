@@ -40,14 +40,10 @@ public class EmailDataAccessObject implements EmailDataAccessInterface {
             return "This session is inactive or does not exist.";
         }
 
-        try {
-            Session session = sessionRepository.getSessionById(id);
-            ArrayList<Message> messagesList = session.getMessages();
+        Session session = sessionRepository.getSessionById(id);
+        ArrayList<Message> messagesList = session.getMessages();
 
-            Message firstMessage = messagesList.get(0);
-            return firstMessage.getDateString();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Message firstMessage = messagesList.get(0);
+        return firstMessage.getDateString();
     }
 }
