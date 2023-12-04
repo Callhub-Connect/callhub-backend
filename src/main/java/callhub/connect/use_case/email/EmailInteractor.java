@@ -1,5 +1,7 @@
 package callhub.connect.use_case.email;
 
+import callhub.connect.entities.exceptions.NoMessagesException;
+import callhub.connect.entities.exceptions.SessionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,16 +25,29 @@ public class EmailInteractor implements EmailInputBoundary {
     @Override
     public ResponseEntity<String> getTranscript(EmailInputData inputData) {
         HttpHeaders headers = new HttpHeaders();
-        String transcript = emailDataAccessObject.getTranscript(inputData.getId());
-        EmailOutputData outputData = new EmailOutputData(transcript);
-        return new ResponseEntity<>(emailPresenter.getResponse(outputData), headers, HttpStatus.OK);
+        try {
+            String transcript = emailDataAccessObject.getTranscript(inputData.getId());
+            EmailOutputData outputData = new EmailOutputData(transcript);
+            return new ResponseEntity<>(emailPresenter.getResponse(outputData), headers, HttpStatus.OK);
+        } catch (SessionNotFoundException e) {
+            return new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
+        } catch (NoMessagesException e) {
+            return new ResponseEntity<>("This session has no messages.", headers, HttpStatus.NOT_FOUND);
+        }
     }
+
 
     @Override
     public ResponseEntity<String> getDate(EmailInputData inputData) {
         HttpHeaders headers = new HttpHeaders();
-        String date = emailDataAccessObject.getDate(inputData.getId());
-        EmailOutputData outputData = new EmailOutputData(date);
-        return new ResponseEntity<>(emailPresenter.getResponse(outputData), headers, HttpStatus.OK);
+        try {
+            String date = emailDataAccessObject.getDate(inputData.getId());
+            EmailOutputData outputData = new EmailOutputData(date);
+            return new ResponseEntity<>(emailPresenter.getResponse(outputData), headers, HttpStatus.OK);
+        } catch (SessionNotFoundException e) {
+            return new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
+        } catch (NoMessagesException e) {
+            return new ResponseEntity<>("This session has no messages.", headers, HttpStatus.NOT_FOUND);
+        }
     }
 }

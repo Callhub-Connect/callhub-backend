@@ -50,6 +50,20 @@ class EmailTests {
     }
 
     @Test
+    void getTranscriptEmpty() throws Exception {
+        Session mockSession = new Session(true, "ABCDEF");
+        mockSession.setId("abc123adsbksdhlsad");
+
+        when(sessionRepository.existsById(anyString())).thenReturn(true);
+        when(sessionRepository.getSessionById(anyString())).thenReturn(mockSession);
+
+        String Url = "/email/transcript/" + mockSession.getId();
+        mockMvc.perform(get(Url)) .andExpect(status().isNotFound())
+                .andExpect(content().string("This session has no messages."));
+    }
+
+
+    @Test
     void getTranscriptDNE() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
         mockSession.setId("abc123adsbksdhlsad");
@@ -60,14 +74,14 @@ class EmailTests {
         mockSession.addMessage(message1);
         mockSession.addMessage(message2);
         when(sessionRepository.existsById(anyString())).thenReturn(false);
-        String expected = "This session is inactive or does not exist.";
 
         String Url = "/email/transcript/" + mockSession.getId();
-        mockMvc.perform(get(Url)).andExpect(status().isOk()).andExpect(content().string(expected));
+        mockMvc.perform(get(Url)).andExpect(status().isNotFound())
+                .andExpect(content().string("This session is inactive or does not exist."));
     }
 
     @Test
-    void getCode() throws Exception {
+    void getDateSuccess() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
         mockSession.setId("abc123adsbksdhlsad");
         LocalDateTime timeStamp = LocalDateTime.of(2023, Month.DECEMBER, 3, 17, 9, 48);
@@ -85,7 +99,21 @@ class EmailTests {
     }
 
     @Test
-    void getCodeDNE() throws Exception {
+    void getDateEmpty() throws Exception {
+        Session mockSession = new Session(true, "ABCDEF");
+        mockSession.setId("abc123adsbksdhlsad");
+
+        when(sessionRepository.existsById(anyString())).thenReturn(true);
+        when(sessionRepository.getSessionById(anyString())).thenReturn(mockSession);
+        String expected = "";
+
+        String Url = "/email/date/" + mockSession.getId();
+        mockMvc.perform(get(Url)) .andExpect(status().isNotFound())
+                .andExpect(content().string("This session has no messages."));
+    }
+
+    @Test
+    void getDateDNE() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
         mockSession.setId("abc123adsbksdhlsad");
         LocalDateTime timeStamp = LocalDateTime.of(2023, Month.DECEMBER, 3, 17, 9, 48);
@@ -95,9 +123,9 @@ class EmailTests {
         mockSession.addMessage(message1);
         mockSession.addMessage(message2);
         when(sessionRepository.existsById(anyString())).thenReturn(false);
-        String expected = "This session is inactive or does not exist.";
 
         String Url = "/email/date/" + mockSession.getId();
-        mockMvc.perform(get(Url)).andExpect(status().isOk()).andExpect(content().string(expected));
+        mockMvc.perform(get(Url)).andExpect(status().isNotFound())
+                .andExpect(content().string("This session is inactive or does not exist."));
     }
 }
