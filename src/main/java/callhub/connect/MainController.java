@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 @EnableMongoRepositories
 public class MainController {
-    @Autowired
-    MessageRepository messageRepository;
+
+    /**
+     * Returns a welcome message for the Callhub application's home page.
+     *
+     * @return A string containing the welcome message.
+     */
     @GetMapping("/")
     public String home() {
-        return "New New Deployment!";
+        return "Welcome to Callhub";
     }
 }
