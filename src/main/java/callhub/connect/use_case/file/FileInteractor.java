@@ -43,7 +43,7 @@ public class FileInteractor implements FileInputBoundary {
         if (result.isEmpty()) {
             outputData.setResult(new ResponseEntity<>("Something went wrong.", headers, HttpStatus.BAD_REQUEST));
         } else {
-            outputData.setResult(new ResponseEntity<>("Document " + result.get().getId() + " was uploaded successfully.", headers, HttpStatus.OK));
+            outputData.setResult(new ResponseEntity<>(result.get().getId(), headers, HttpStatus.OK));
         }
         return outputData.getResponse();
     }
@@ -76,7 +76,7 @@ public class FileInteractor implements FileInputBoundary {
                 outputData.setResult(new ResponseEntity<>("File couldn't be uploaded.", headers, HttpStatus.BAD_REQUEST));
             } else {
                 fileDataAccessObject.addIDToSession(inputData.getCode(), result.get().getId());
-                outputData.setResult(new ResponseEntity<>(inputData.getCode() + " was updated with document " + result.get().getId(), headers, HttpStatus.OK));
+                outputData.setResult(new ResponseEntity<>(result.get().getId(), headers, HttpStatus.OK));
             }
         }
         return outputData.getResponse();
