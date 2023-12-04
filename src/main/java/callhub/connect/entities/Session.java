@@ -35,6 +35,13 @@ public class Session {
     }
 
     /**
+    * Sets the unique identifier (ID) of the session for testing purposes.
+    */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
      * Gets the unique identifier (ID) associated with the session.
      *
      * @return The ID of the session as a string.
