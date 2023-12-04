@@ -1,4 +1,4 @@
-package callhub.connect;
+package callhub.connect.session;
 
 import callhub.connect.data_access.DocumentRepository;
 import callhub.connect.data_access.SessionRepository;
@@ -65,13 +65,6 @@ public class SessionControllerTests {
 
         // Perform the request and verify the response
         mockMvc.perform(get("/session/join/ABCDEF"))
-                .andExpect(status().isOk());
-    }
-
-    // hardcoded an existing session code, may not work if database was cleared!
-    @Test
-    void testJoinExistingSession() throws Exception {
-        mockMvc.perform(get("/session/join/XVK1DU")).andDo(print())
                 .andExpect(status().isOk());
     }
 

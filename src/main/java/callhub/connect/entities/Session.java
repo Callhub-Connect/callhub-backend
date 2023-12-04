@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 @Document("sessions")
 public class Session {
@@ -51,4 +52,11 @@ public class Session {
         this.active = false;
     }
 
+    public boolean getIsActive() {
+        return this.active;
+    }
+
+    public List<String> getDocuments() {
+        return this.documents;
+    }
 }
