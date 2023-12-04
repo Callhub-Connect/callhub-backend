@@ -29,8 +29,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,8 +41,6 @@ public class SessionControllerTests {
     @MockBean
     public SessionRepository sessionRepository;
 
-    @MockBean
-    private SessionInteractor sessionInteractor;
 
     @Test
     public void createSessionTest() throws Exception {
@@ -57,9 +54,8 @@ public class SessionControllerTests {
     }
 
     @Test
-    void testJoinSession_mockRepository() throws Exception {
+    void testJoinSession() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
-        ResponseEntity<String> mockResponseEntity = ResponseEntity.ok("Joined session");
 
         when(sessionRepository.getSessionsByActiveAndCode(anyBoolean(), anyString())).thenReturn(mockSession);
 
@@ -69,24 +65,23 @@ public class SessionControllerTests {
     }
 
     @Test
-    void testJoinSession_mockInteractor() throws Exception {
+    void testEndSession() throws Exception {
         Session mockSession = new Session(true, "ABCDEF");
-        ResponseEntity<String> mockResponseEntity = ResponseEntity.ok("Joined session");
-
-        when(sessionInteractor.joinSession(any())).thenReturn(mockResponseEntity);
+        when(sessionRepository.getSessionsByActiveAndCode(anyBoolean(), anyString())).thenReturn(mockSession);
 
         // Perform the request and verify the response
-        mockMvc.perform(get("/session/join/ABCDEF"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Joined session"));  // Add this line to check the response content;
+        mockMvc.perform(get("/session/end-session/ABCDEF"))
+                .andExpect(status().isOk());
+        assert !mockSession.getIsActive();
     }
+
 
     @Test
     void testAllSession() throws Exception {
-        when(sessionRepository.save(any())).thenReturn(new Session(
-                true,
-                "ABCDEF"
-        ));
+        Session mockSession = new Session(true, "ABCDEF");
+
+        when(sessionRepository.getSessionsByActiveAndCode(anyBoolean(), anyString())).thenReturn(mockSession);
+        when(sessionRepository.save(any())).thenReturn(mockSession);
 
         RequestBuilder newRequest = get("/session/new-session?code=ABCDEF");
         mockMvc.perform(newRequest).andExpect(status().isOk());
