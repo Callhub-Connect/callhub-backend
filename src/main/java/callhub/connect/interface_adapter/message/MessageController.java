@@ -52,6 +52,18 @@ public class MessageController {
         return gson.toJson(response);
     }
 
+    @MessageMapping("/document-customer/{sessionId}")
+    @SendTo("/topic/document-employee/{sessionId}")
+    public String sendDocumentIdCustomer(@DestinationVariable String sessionId, String documentId) throws Exception {
+        return documentId;
+    }
+
+    @MessageMapping("/document-employee/{sessionId}")
+    @SendTo("/topic/document-customer/{sessionId}")
+    public String sendDocumentIdEmployee(@DestinationVariable String sessionId, String documentId) throws Exception {
+        return documentId;
+    }
+
     /**
      * Handles the ending of a session.
      *
