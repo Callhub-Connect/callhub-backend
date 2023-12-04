@@ -16,7 +16,6 @@ public class SessionController {
 
     @Autowired
     private SessionInputBoundary sessionInteractor;
-
     /**
      * Initiates the creation of a new session and returns the response as a ResponseEntity containing a string representation of the new session's data.
      *

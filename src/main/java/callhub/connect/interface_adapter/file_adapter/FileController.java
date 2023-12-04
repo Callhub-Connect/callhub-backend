@@ -3,8 +3,7 @@ import callhub.connect.data_access.*;
 import callhub.connect.entities.FileDocument;
 import callhub.connect.entities.Session;
 import callhub.connect.entities.exceptions.FileLimitExceededException;
-import callhub.connect.use_case.file.FileDataAccessInterface;
-import callhub.connect.use_case.file.FileInputBoudary;
+import callhub.connect.use_case.file.*;
 import callhub.connect.use_case.message.MessageInputBoundary;
 import org.springframework.http.MediaType;
 import org.bson.types.Binary;
@@ -27,11 +26,11 @@ public class FileController {
     public DocumentRepository documentRepository;
     @Autowired
     public SessionRepository sessionRepository;
-    HttpHeaders headers = new HttpHeaders();
-    FileDataAccessInterface dataAccessObject;
+    @Autowired
+    FileDataAcessObject dataAccessObject;
 
     @Autowired
-    private FileInputBoudary fileInteractor;
+    private FileInputBoundary fileInteractor;
 
     /**
      * Deprecated: This method is intended for testing purposes only.
@@ -43,19 +42,9 @@ public class FileController {
      * HTTP status code if an error occurs (e.g., file limit exceeded or bad request).
      */
     @PostMapping("/upload_network")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) {
-        dataAccessObject = new FileDataAcessObject(file);
-        FileDocument result;
-        Binary data;
-        try {
-            data = dataAccessObject.serializePDF();
-            result = documentRepository.save(new FileDocument(name, data, LocalDate.now()));
-            return new ResponseEntity<>(result.getId(), headers, HttpStatus.OK);
-        } catch (FileLimitExceededException e) {
-            return new ResponseEntity<>("File is too large.", headers, HttpStatus.PAYLOAD_TOO_LARGE);
-        } catch (IOException e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) throws IOException {
+        FileInputData inputData = new FileInputData(file, name);
+        return fileInteractor.uploadFile(inputData);
     }
 
     /**
@@ -66,17 +55,9 @@ public class FileController {
      * HTTP status code if the document is not found or if an error occurs.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findDocumentByID(@PathVariable String id) {
-        Optional<FileDocument> item = fileInteractor.findById(id);
-        if (item.isEmpty()) {
-            return new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST);
-        } else {
-            // decode Binary to byte[] and return as a pdf
-            Binary data = item.get().getContent();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            byte[] encodedData = data.getData();
-            return new ResponseEntity<>(encodedData, headers, HttpStatus.OK);
-        }
+    public ResponseEntity<Object> findDocumentByID(@PathVariable String id) throws IOException {
+        FileInputData inputData = new FileInputData(id);
+        return fileInteractor.findDocumentByID(inputData);
     }
 
     /**
@@ -92,28 +73,8 @@ public class FileController {
      */
     @PostMapping("/session_add_pdf")
     public ResponseEntity<Object> addPDFToSession(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, @RequestParam("session") String code) {
-        boolean sessionExists = sessionRepository.existsById(code);
-        if (!sessionExists) {
-            new ResponseEntity<>("This session is inactive or does not exist.", headers, HttpStatus.NOT_FOUND);
-        }
-
-        dataAccessObject = new FileDataAcessObject(file);
-        FileDocument result = new FileDocument();
-        Binary data;
-        try {
-            data = dataAccessObject.serializePDF();
-            result = documentRepository.save(new FileDocument(name, data, LocalDate.now()));
-        } catch (IOException e) {
-            new ResponseEntity<>("An issue occurred.", headers, HttpStatus.BAD_REQUEST);
-        }
-        try {
-            Session currentSession = sessionRepository.getSessionsByActiveAndCode(true, code);
-            currentSession.addDocument(result.getId());
-            sessionRepository.save(currentSession);
-            return new ResponseEntity<>(result.getId(), headers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
-        }
+        FileInputData inputData = new FileInputData(file, name, code);
+        return fileInteractor.addPDFToSession(inputData);
     }
 
     /**
@@ -124,26 +85,28 @@ public class FileController {
      * @return ResponseEntity indicating the result of the update operation, including success or appropriate error messages and HTTP status codes.
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile file) {
-        Optional<FileDocument> existingFileDocumentOpt = documentRepository.findById(id);
-
-        if (existingFileDocumentOpt.isEmpty()) {
-            return new ResponseEntity<>("File not found.", headers, HttpStatus.NOT_FOUND);
-        }
-
-        FileDocument existingFileDocument = existingFileDocumentOpt.get();
-        dataAccessObject = new FileDataAcessObject(file);
-
-        try {
-            Binary newContent = dataAccessObject.serializePDF();
-            existingFileDocument.setContent(newContent);
-            existingFileDocument.setUploadDate(LocalDate.now()); // Update upload date if needed
-            documentRepository.save(existingFileDocument);
-            return new ResponseEntity<>("File updated successfully!", headers, HttpStatus.OK);
-        } catch (FileLimitExceededException e) {
-            return new ResponseEntity<>("File is too large.", headers, HttpStatus.PAYLOAD_TOO_LARGE);
-        } catch (IOException e) {
-            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile file) {
+            FileInputData inputData = new FileInputData(id, file);
+            return fileInteractor.updateFile(inputData);
+//        Optional<FileDocument> existingFileDocumentOpt = documentRepository.findById(id);
+//
+//        if (existingFileDocumentOpt.isEmpty()) {
+//            return new ResponseEntity<>("File not found.", headers, HttpStatus.NOT_FOUND);
+//        }
+//
+//        FileDocument existingFileDocument = existingFileDocumentOpt.get();
+//        dataAccessObject = new FileDataAcessObject();
+//
+//        try {
+//            Binary newContent = dataAccessObject.serializePDF(file);
+//            existingFileDocument.setContent(newContent);
+//            existingFileDocument.setUploadDate(LocalDate.now()); // Update upload date if needed
+//            documentRepository.save(existingFileDocument);
+//            return new ResponseEntity<>("File updated successfully!", headers, HttpStatus.OK);
+//        } catch (FileLimitExceededException e) {
+//            return new ResponseEntity<>("File is too large.", headers, HttpStatus.PAYLOAD_TOO_LARGE);
+//        } catch (IOException e) {
+//            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+//        }
     }
 }
