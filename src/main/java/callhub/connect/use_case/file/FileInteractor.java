@@ -64,7 +64,7 @@ public class FileInteractor implements FileInputBoundary {
         Optional<FileDocument> result = fileDataAccessObject.findDocumentByID(inputData.getID());
         FileOutputData outputData = new FileOutputData();
         if (result.isEmpty()) {
-            outputData.setResult(new ResponseEntity<>("Something went wrong.", headers, HttpStatus.BAD_REQUEST));
+            outputData.setResult(new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST));
         } else {
             Binary data = result.get().getContent();
             headers.setContentType(MediaType.APPLICATION_PDF);

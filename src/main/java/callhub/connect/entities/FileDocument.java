@@ -28,11 +28,6 @@ public class FileDocument {
     }
 
     /**
-     * Constructs a FileDocument object with the provided attributes.
-     */
-    public FileDocument() {}
-
-    /**
      * Gets the unique identifier (ID) associated with the file document.
      *
      * @return The ID of the file document as a string.
@@ -66,5 +61,9 @@ public class FileDocument {
      */
     public void setUploadDate(LocalDate now) {
         this.timeStamp = now;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

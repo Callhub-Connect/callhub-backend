@@ -8,10 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class FilePresenter implements FileOutputBoundary {
 
-    public ResponseEntity<Object> getResponse(FileOutputData fileOutputData) {
-        return fileOutputData.getResponse();
-    }
-
     @Override
     public ResponseEntity<Object> sendResponse(FileOutputData outputData) {
         return outputData.getResponse();

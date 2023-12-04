@@ -41,23 +41,6 @@ class FileControllerTests {
     MockMvc mockMvc;
 
     @Test
-    void testUploadPDFLocal() throws Exception {
-        when(documentRepository.save(any())).thenReturn(new FileDocument(
-                "test123",
-                new Binary("sample file content".getBytes()),
-                LocalDate.now()));
-
-        RequestBuilder request = get("/files/upload_local?name=test123");
-        mockMvc.perform(request).andExpect(status().isOk());
-    }
-
-    @Test
-    void testUploadPDFLocal_NoName() throws Exception {
-        RequestBuilder request = get("/files/upload_local");
-        mockMvc.perform(request).andExpect(status().isBadRequest());
-    }
-
-    @Test
     void testUploadFile_Mock() throws Exception {
         MockMultipartFile sampleFile = new MockMultipartFile(
                 "file",
@@ -106,18 +89,18 @@ class FileControllerTests {
 
     @Test
     void testFindDocumentByID() throws Exception {
-//        FileDocument fileDocument = new FileDocument(
-//                "MockFile",
-//                new Binary("This is the file content".getBytes()),
-//                LocalDate.now());
-//
-//        fileDocument.setId("123314");
-//
-//        when(documentRepository.findById(any())).thenReturn(Optional.of(fileDocument));
-//
-//        RequestBuilder request = get("/files/{id}", fileDocument.getId());
-//        mockMvc.perform(request).andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_PDF_VALUE));
+        FileDocument fileDocument = new FileDocument(
+                "MockFile",
+                new Binary("This is the file content".getBytes()),
+                LocalDate.now());
+
+        fileDocument.setId("123314");
+
+        when(documentRepository.findById(any())).thenReturn(Optional.of(fileDocument));
+
+        RequestBuilder request = get("/files/{id}", fileDocument.getId());
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF_VALUE));
     }
 
     @Test
@@ -147,6 +130,7 @@ class FileControllerTests {
 
         // Mock the behavior of the sessionRepository.save() method
         when(sessionRepository.getSessionsByActiveAndCode(true, "ABCDEF")).thenReturn(mockSession);
+        when(sessionRepository.existsByCodeAndActive("ABCDEF", true)).thenReturn(true);
 
         MockMultipartHttpServletRequestBuilder multipartRequest =
                 MockMvcRequestBuilders.multipart("/files/session_add_pdf");
@@ -174,9 +158,58 @@ class FileControllerTests {
 
         // Mock the behavior of the sessionRepository.save() method
         when(sessionRepository.getSessionsByActiveAndCode(true, "ABCDEF")).thenReturn(mockSession);
+        when(sessionRepository.existsByCodeAndActive("ABCDEF", true)).thenReturn(false);
 
         MockMultipartHttpServletRequestBuilder multipartRequest =
                 MockMvcRequestBuilders.multipart("/files/session_add_pdf");
-        mockMvc.perform(multipartRequest.file(sampleFile).param("session", "123456").param("name", "MockFile")).andExpect(status().isBadRequest());
+        mockMvc.perform(multipartRequest.file(sampleFile).param("session", "123456").param("name", "MockFile")).andExpect(status().isNotFound());
     }
+
+    @Test
+    void testUpdatePDFValidPDF() throws Exception {
+        MockMultipartFile sampleFile = new MockMultipartFile(
+                "file",
+                "filename.pdf",
+                MediaType.APPLICATION_PDF_VALUE,
+                "<<pdf content>>".getBytes()
+        );
+        when(documentRepository.findById("abasdflkqjwet")).thenReturn(Optional.of(new FileDocument(
+                "MockFile",
+                new Binary("sample pdf content".getBytes()),
+                LocalDate.now())));
+
+        MockMultipartHttpServletRequestBuilder multipartRequest =
+                (MockMultipartHttpServletRequestBuilder) MockMvcRequestBuilders.multipart("/files/update/abasdflkqjwet")
+                        .file(sampleFile)
+                        .param("id", "abasdflkqjwet").with(request -> {
+                            request.setMethod("PUT"); // Change to PUT request
+                            return request;
+                        });
+
+        mockMvc.perform(multipartRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdatePDFInvalidPDF() throws Exception {
+        MockMultipartFile sampleFile = new MockMultipartFile(
+                "file",
+                "filename.pdf",
+                MediaType.APPLICATION_PDF_VALUE,
+                "<<pdf content>>".getBytes()
+        );
+        when(documentRepository.findById("abasdflkqjwet")).thenReturn(Optional.empty());
+
+        MockMultipartHttpServletRequestBuilder multipartRequest =
+                (MockMultipartHttpServletRequestBuilder) MockMvcRequestBuilders.multipart("/files/update/abasdflkqjwet")
+                        .file(sampleFile)
+                        .param("id", "abasdflkqjwet").with(request -> {
+                            request.setMethod("PUT"); // Change to PUT request
+                            return request;
+                        });
+
+        mockMvc.perform(multipartRequest)
+                .andExpect(status().isNotFound());
+    }
+
 }
