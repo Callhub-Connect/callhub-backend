@@ -27,6 +27,15 @@ public class MessageDataAccessObject implements MessageDataAccessInterface {
         this.sessionDataAccessInterface = sessionDataAccessInterface;
     }
 
+    /**
+     * Generates a response map containing a message and its timestamp.
+     *
+     * This method creates a HashMap with the given message and the current timestamp,
+     * formatted as specified by TIME_FORMATTER and adjusted for AM/PM notation.
+     *
+     * @param message The message to be included in the response.
+     * @return A HashMap with keys "message" and "timestamp", holding the message and its formatted timestamp.
+     */
     public HashMap<String, String> generateResponse(String message){
         HashMap<String, String> response = new HashMap<>();
         LocalDateTime timestamp = LocalDateTime.now();
@@ -37,6 +46,17 @@ public class MessageDataAccessObject implements MessageDataAccessInterface {
         return response;
     }
 
+    /**
+     * Saves a message to the database and associates it with a session.
+     *
+     * This method creates a new Message object using the provided content, session ID, and sender,
+     * and saves it to the message repository. It then attempts to add this message to the specified session.
+     * Any exceptions during the process are caught and their messages are printed to the console.
+     *
+     * @param content The content of the message to be saved.
+     * @param sessionId The ID of the session to which the message will be added.
+     * @param sender The sender of the message.
+     */
     public void sendResponseToDatabase(String content, String sessionId, Sender sender) {
         Message message = new Message(content, sessionId, sender);
         Message result = messageRepository.save(message);
