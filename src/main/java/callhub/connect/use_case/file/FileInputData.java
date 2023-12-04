@@ -59,11 +59,11 @@ public class FileInputData {
         return this.data;
     }
 
-    public Binary serializePDF() throws IOException {
+    private Binary serializePDF() throws IOException {
         return byteArrayToBinary(convertPDFToByteArrayUsingFile());
     }
 
-    public Binary byteArrayToBinary(byte[] byteArray) {
+    private Binary byteArrayToBinary(byte[] byteArray) {
         return new Binary(byteArray);
     }
 

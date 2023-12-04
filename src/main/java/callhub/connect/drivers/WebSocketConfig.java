@@ -13,6 +13,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Value("${azure}")
     private String azureEndpoint;
+
+    /**
+     * Registers STOMP endpoints for WebSocket communication.
+     *
+     * This method adds a STOMP endpoint at '/callhub' and configures it to allow connections
+     * from specified origins - locally from '<a href="http://localhost:3000/">...</a>' and from an Azure endpoint.
+     *
+     * @param registry The registry where the endpoint will be added.
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry
                                                registry) {
@@ -20,6 +29,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins("http://localhost:3000/", azureEndpoint);
     }
 
+    /**
+     * Configures the message broker for handling STOMP messages.
+     *
+     * This method sets up the message broker with a simple broker available at '/topic'.
+     * It also defines '/app' as the prefix for application destination prefixes used in message mapping.
+     *
+     * @param config The MessageBrokerRegistry to configure.
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){
         config.enableSimpleBroker("/topic");

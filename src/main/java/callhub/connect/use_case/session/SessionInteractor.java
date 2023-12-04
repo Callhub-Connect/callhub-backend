@@ -52,6 +52,16 @@ public class SessionInteractor implements SessionInputBoundary{
         return new ResponseEntity<>(gson.toJson(responseBody), headers, HttpStatus.OK);
     }
 
+    /**
+     * Ends a session based on the provided SessionInputData.
+     *
+     * This method ends a session using the code from the given SessionInputData.
+     * It utilizes the sessionDataAccessObject to perform the operation and
+     * returns the result as a JSON string within a ResponseEntity.
+     *
+     * @param inputData The SessionInputData containing the session code to be ended.
+     * @return ResponseEntity with the JSON representation of the operation result and HTTP status OK.
+     */
     @Override
     public ResponseEntity<String> endSession(SessionInputData inputData) {
         HttpHeaders headers = new HttpHeaders();

@@ -78,6 +78,9 @@ public class Session {
         messages.add(message);
     }
 
+    /**
+     * Sets the session status to inactive.
+     */
     public void setInactive(){
         this.active = false;
     }

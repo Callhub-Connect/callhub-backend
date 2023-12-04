@@ -38,6 +38,16 @@ public class SessionController {
         return sessionInteractor.joinSession(inputData);
     }
 
+    /**
+     * Ends a session based on the provided session code.
+     *
+     * This method is an HTTP GET endpoint that takes a session code as a path variable.
+     * It creates a SessionInputData object with the provided code and passes it to the sessionInteractor's endSession method.
+     * The result from the sessionInteractor is returned as a ResponseEntity.
+     *
+     * @param code The code of the session to end.
+     * @return A ResponseEntity containing the outcome of the session ending process.
+     */
     @GetMapping("/end-session/{code}")
     public ResponseEntity<String> endSession(@PathVariable String code) {
         SessionInputData inputData = new SessionInputData(code);

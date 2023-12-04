@@ -52,6 +52,16 @@ public class MessageController {
         return gson.toJson(response);
     }
 
+    /**
+     * Handles the ending of a session.
+     *
+     * This method is mapped to respond to messages on '/end-session/{sessionId}' path.
+     * It sends a message to '/topic/end-session/{sessionId}' indicating that the session has ended.
+     *
+     * @param sessionId The ID of the session to be ended.
+     * @return A string message indicating the session has ended.
+     * @throws Exception if any error occurs during the process.
+     */
     @MessageMapping("/end-session/{sessionId}")
     @SendTo("/topic/end-session/{sessionId}")
     public String endSession(@DestinationVariable String sessionId) throws Exception {

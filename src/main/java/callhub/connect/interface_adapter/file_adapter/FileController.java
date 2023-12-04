@@ -1,33 +1,15 @@
 package callhub.connect.interface_adapter.file_adapter;
-import callhub.connect.data_access.*;
-import callhub.connect.entities.FileDocument;
-import callhub.connect.entities.Session;
-import callhub.connect.entities.exceptions.FileLimitExceededException;
 import callhub.connect.use_case.file.*;
-import callhub.connect.use_case.message.MessageInputBoundary;
-import org.springframework.http.MediaType;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/files")
 public class FileController {
-
-    @Autowired
-    public DocumentRepository documentRepository;
-    @Autowired
-    public SessionRepository sessionRepository;
-    @Autowired
-    FileDataAcessObject dataAccessObject;
 
     @Autowired
     private FileInputBoundary fileInteractor;
@@ -88,25 +70,5 @@ public class FileController {
     public ResponseEntity<Object> updateFile(@PathVariable String id, @RequestParam("file") MultipartFile file) {
             FileInputData inputData = new FileInputData(id, file);
             return fileInteractor.updateFile(inputData);
-//        Optional<FileDocument> existingFileDocumentOpt = documentRepository.findById(id);
-//
-//        if (existingFileDocumentOpt.isEmpty()) {
-//            return new ResponseEntity<>("File not found.", headers, HttpStatus.NOT_FOUND);
-//        }
-//
-//        FileDocument existingFileDocument = existingFileDocumentOpt.get();
-//        dataAccessObject = new FileDataAcessObject();
-//
-//        try {
-//            Binary newContent = dataAccessObject.serializePDF(file);
-//            existingFileDocument.setContent(newContent);
-//            existingFileDocument.setUploadDate(LocalDate.now()); // Update upload date if needed
-//            documentRepository.save(existingFileDocument);
-//            return new ResponseEntity<>("File updated successfully!", headers, HttpStatus.OK);
-//        } catch (FileLimitExceededException e) {
-//            return new ResponseEntity<>("File is too large.", headers, HttpStatus.PAYLOAD_TOO_LARGE);
-//        } catch (IOException e) {
-//            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
-//        }
     }
 }
