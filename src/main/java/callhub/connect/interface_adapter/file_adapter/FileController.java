@@ -71,4 +71,11 @@ public class FileController {
             FileInputData inputData = new FileInputData(id, file);
             return fileInteractor.updateFile(inputData);
     }
+
+    @GetMapping("/name/{id}")
+    public ResponseEntity<Object> getNameFromID(@PathVariable String id) throws IOException {
+        FileInputData inputData = new FileInputData(id);
+        return fileInteractor.getNameFromID(inputData);
+    }
+
 }

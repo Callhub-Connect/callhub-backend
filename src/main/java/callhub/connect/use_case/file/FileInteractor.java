@@ -133,4 +133,27 @@ public class FileInteractor implements FileInputBoundary {
         }
         return filePresenter.sendResponse(fileOutputData);
     }
+
+    /**
+     * Retrieves the name of a file based on its unique identifier.
+     *
+     * This method searches for a file in the database using its ID provided in {@link FileInputData}.
+     * If the file is found, the method returns the file's name along with an HTTP status of OK (HttpStatus.OK).
+     * If the file is not found, a message indicating the file could not be found is returned along with a BAD_REQUEST (HttpStatus.BAD_REQUEST) status.
+     *
+     * @param inputData containing the ID of the file to be retrieved.
+     * @return A {@link ResponseEntity<Object>} that contains the file name if found, or an error message if not found.
+     * The ResponseEntity also includes appropriate HTTP headers and status codes.
+     */
+    @Override
+    public ResponseEntity<Object> getNameFromID(FileInputData inputData) {
+        Optional<FileDocument> result = fileDataAccessObject.findDocumentByID(inputData.getID());
+        FileOutputData outputData = new FileOutputData();
+        if (result.isEmpty()) {
+            outputData.setResult(new ResponseEntity<>("File could not be found.", headers, HttpStatus.BAD_REQUEST));
+        } else {
+            outputData.setResult(new ResponseEntity<>(result.get().getName(), headers, HttpStatus.OK));
+        }
+        return filePresenter.sendResponse(outputData);
+    }
 }
