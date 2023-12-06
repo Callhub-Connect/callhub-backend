@@ -11,5 +11,5 @@ public interface FileInputBoundary {
     ResponseEntity<Object> findDocumentByID(FileInputData fileInputData) throws IOException;
     ResponseEntity<Object> addPDFToSession(FileInputData fileInputData);
     ResponseEntity<Object> updateFile(FileInputData fileInputData);
-
+    ResponseEntity<Object> getNameFromID(FileInputData inputData);
 }

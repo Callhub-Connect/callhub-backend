@@ -212,4 +212,25 @@ class FileControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void testGetNameFromIDValid() throws Exception{
+        FileDocument mockFile = new FileDocument("mockFile", null, LocalDate.now());
+        mockFile.setId("123314");
+
+        when(documentRepository.findById(any())).thenReturn(Optional.of(mockFile));
+
+        RequestBuilder request = get("/files/name/{id}", mockFile.getId());
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(content().string("mockFile"));
+    }
+
+    @Test
+    void testGetNameFromIDNotValid() throws Exception{
+
+        when(documentRepository.findById(any())).thenReturn(Optional.empty());
+
+        RequestBuilder request = get("/files/name/{id}", "12345");
+        mockMvc.perform(request).andExpect(status().isBadRequest());
+    }
+
 }
